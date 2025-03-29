@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t nvidia/cuda:12.8.1-base-ubuntu24.04 .'
+            }
+        }
+        stage('Test CUDA App') {
+            steps {
+                sh 'docker run --gpus all nvidia/cuda:12.8.1-base-ubuntu24.04 /app/run'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Example: Push to Docker Hub or deploy to a cloud GPU instance
+                sh 'echo "Deploying to cloud (e.g., AWS EC2 GPU instance)"'
+                // Add real deployment steps here (e.g., docker push)
+            }
+        }
+    }
+    post {
+        always {
+            sh 'docker system prune -f'
+        }
+    }
+}5e
